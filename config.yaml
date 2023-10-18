@@ -1,0 +1,10 @@
+samplesfile: resources/samples.txt
+samplesfile_short: resources/short_samples.txt
+star_genome_dir: reference/genome_dir
+reference_gtf: /work/shah/reference/transcriptomes/GRCh38/genes/genes.gtf
+#reference_gtf: reference/gencode.v31.annotation.gtf
+#reference_gtf: reference/hg38.ensGene.gtf
+fastq_pathfile: resources/fastq_paths.tsv
+genome_version: "hg38"
+log_dir: logs
+tmp_dir: tmp

@@ -1,0 +1,7 @@
+.snakemake/
+SHAH-1433
+fastq/
+logs/
+reference/
+resources/
+results/
