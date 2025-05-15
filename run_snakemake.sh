@@ -1,20 +1,11 @@
-CLUSTER_CMD=("bsub -n {threads} -R {cluster.resources} -M {cluster.memory} -o {cluster.output} -e {cluster.error} -J {cluster.name} -W {cluster.time}")
-config_yaml=./config.yaml
-cluster_yaml=./cluster.yaml
-
-cmd="snakemake"
-cmd="$cmd --configfile $config_yaml"
-cmd="$cmd --jobs 100"
-cmd="$cmd --restart-times 0"
-cmd="$cmd --rerun-incomplete"
-cmd="$cmd --cluster-config $cluster_yaml"
-cmd="$cmd --cluster \"${CLUSTER_CMD}\""
-cmd="$cmd --cluster-cancel bkill"
-cmd="$cmd --use-singularity"
-cmd="$cmd --singularity-args \"--bind /juno --bind /home\""
+cluster_fmt="sbatch --partition=componc_cpu --cpus-per-task={threads} --mem={resources.mem_mb} --job-name={rule}.{wildcards} --error=logs/{rule}/{rule}.{wildcards}.%j.err --output=logs/{rule}/{rule}.{wildcards}.%j.out --time=24:00:00"
+cmd="snakemake --executor cluster-generic"
+cmd="$cmd --configfile config.yaml"
+cmd="$cmd --cluster-generic-submit-cmd \"$cluster_fmt\""
+cmd="$cmd --profile profile/"
+cmd="$cmd --singularity-args \"--cleanenv --bind /data1 --bind /home\""
+cmd="$cmd --dryrun"
+# cmd="$cmd --allowed-rules featurecounts"
 cmd="$cmd -p"
-cmd="$cmd --allowed-rules featurecounts"
-# cmd="$cmd --dry-run"
-
 echo $cmd
 eval $cmd
