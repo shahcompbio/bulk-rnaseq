@@ -6,7 +6,7 @@ if not os.path.exists(config['log_dir']): subprocess.run(f'mkdir -p {config["log
 if not os.path.exists(config['tmp_dir']): subprocess.run(f'mkdir -p {config["tmp_dir"]}', shell=True)
 
 
-SAMPLES = [s.strip() for s in open(config['samplesfile']).readlines()]
+SAMPLES = [s.strip() for s in open(config['samplesfile_short']).readlines()]
 
 rule all:
     input:
@@ -37,7 +37,9 @@ rule star_align:
         r1s = _get_r1s,
         r2s = _get_r2s,
     output:
-        bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam'
+        #bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam'
+        #bam = 'results/{sample}.bam'
+        bam = 'results/star/{sample}.bam',
     params:
         r1s = lambda w, input: ','.join(input.r1s),
         r2s = lambda w, input: ','.join(input.r2s),
@@ -59,7 +61,8 @@ rule star_align:
 
 rule featurecounts:
     input:
-        bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam',
+        #bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam',
+        bam = 'results/star/{sample}.bam',
     output:
         counts = 'results/featurecounts/{sample}.counts.txt',
     params:
@@ -74,7 +77,8 @@ rule featurecounts:
 
 rule index_and_softlink:
     input:
-        bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam',
+        #bam = 'results/star/{sample}/{sample}.Aligned.sortedByCoord.out.bam',
+        bam = 'results/star/{sample}.bam',
     output:
         bam = 'results/star/{sample}.bam',
         bai = 'results/star/{sample}.bam.bai',
